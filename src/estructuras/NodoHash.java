@@ -4,7 +4,7 @@ public class NodoHash<K,V> {
 
 	private K llave;
 	private V valor;
-	
+	private NodoHash<K, V> siguiente;
 	
 	public NodoHash(K llave, V valor) {
 		super();
@@ -30,6 +30,16 @@ public class NodoHash<K,V> {
 
 	public void setValor(V valor) {
 		this.valor = valor;
+	}
+
+
+	public NodoHash<K, V> getSiguiente() {
+		return siguiente;
+	}
+
+
+	public void setSiguiente(NodoHash<K, V> siguiente) {
+		this.siguiente = siguiente;
 	}
 	
 	
