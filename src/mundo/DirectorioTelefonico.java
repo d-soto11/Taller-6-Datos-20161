@@ -1,5 +1,7 @@
 package mundo;
 
+import java.util.ArrayList;
+
 import estructuras.TablaHash;
 import estructuras.TablaHash.CollisionType;
 
@@ -10,8 +12,8 @@ public class DirectorioTelefonico {
 
 	
 	public DirectorioTelefonico(){
-		directorioTelefonos = new TablaHash<String, RegistroTelefonico>(1000, 0.8f, CollisionType.SIMPLE);
-		directorioApellidos = new TablaHash<String, RegistroTelefonico>(1000, 0.8f, CollisionType.LINKED);
+		directorioTelefonos = new TablaHash<String, RegistroTelefonico>(1000000, 0.8f, CollisionType.SIMPLE);
+		directorioApellidos = new TablaHash<String, RegistroTelefonico>(1000000, 0.8f, CollisionType.LINKED);
 	}
 	
 	public void agregarRegistro(RegistroTelefonico registro){
@@ -23,8 +25,8 @@ public class DirectorioTelefonico {
 		return directorioTelefonos.get(telefono);
 	}
 
-	public RegistroTelefonico buscarRegistrosApellido(String apellidos) {
-		return directorioApellidos.get(apellidos);
+	public ArrayList<RegistroTelefonico> buscarRegistrosApellido(String apellidos) {
+		return directorioApellidos.getMultiple(apellidos);
 	}
 
 }

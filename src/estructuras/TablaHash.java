@@ -1,5 +1,6 @@
 package estructuras;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TablaHash<K extends Comparable<K> ,V> {
@@ -76,22 +77,24 @@ public class TablaHash<K extends Comparable<K> ,V> {
 
 		switch (tipo) {
 		case SIMPLE:
-			if (factorCarga >= factorCargaMax){
-				data = Arrays.copyOf(data, capacidad+100);
-				capacidad+=100;
-			}
 			while (pos<capacidad && data[pos] != null && data[pos].getLlave().compareTo(llave) != 0){
 				pos++;
 			}
+			
+			if (factorCarga >= factorCargaMax || pos>=capacidad){
+				data = Arrays.copyOf(data, (int)(capacidad*1.5));
+				capacidad*=1.5;
+			}
+			
 			data[pos] = new NodoHash<K,V>(llave, valor);
 			count++;
 			factorCarga = count/capacidad;
 			break;
 
 		case LINKED:
-			if (factorCarga >= factorCargaMax){
-				data = Arrays.copyOf(data, capacidad+100);
-				capacidad+=100;
+			if (factorCarga >= factorCargaMax || pos>=capacidad){
+				data = Arrays.copyOf(data, (int)(capacidad*1.5));
+				capacidad*=1.5;
 			}
 			if (data[pos] != null){
 				NodoHash<K, V> nodo = data[pos];
@@ -145,6 +148,33 @@ public class TablaHash<K extends Comparable<K> ,V> {
 	//Hash
 	private int hash(K llave){
 		return (llave.hashCode() & 0x7fffffff) % capacidad;
+	}
+
+	public ArrayList<V> getMultiple(K llave) {
+		switch (tipo) {
+		case SIMPLE:
+			return null;
+		case LINKED:
+			ArrayList<V> valores = new ArrayList<V>();
+			int pos = hash(llave);
+			if (data[pos] != null){
+				NodoHash<K, V> nodo = data[pos];
+				if (nodo.getLlave().compareTo(llave)==0){
+					valores.add(nodo.getValor());
+				}
+				while (nodo.getSiguiente()!=null){
+					nodo = nodo.getSiguiente();
+					if (nodo.getLlave().compareTo(llave)==0){
+						valores.add(nodo.getValor());
+					}
+				}
+				return valores;
+			}
+			break;
+		default:
+			break;
+		}
+		return null;
 	}
 
 }

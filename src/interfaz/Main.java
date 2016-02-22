@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import mundo.DirectorioTelefonico;
 import mundo.RegistroTelefonico;
@@ -18,34 +19,42 @@ public class Main {
 		//Cargar registros
 		System.out.println("Bienvenido al directorio telefonico de Ciudad Central");
 		System.out.println("Espere un momento mientras cargamos la informacion...");
+		System.out.println("Esto puede tardar unos minutos...");
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(rutaEntrada)));
 			String entrada = br.readLine();
 
 			directorio = new DirectorioTelefonico();
-
-			while ((entrada=br.readLine()) != null){
+			int i = 0;
+			entrada = br.readLine();
+			while (entrada != null){
 				String[] datos = entrada.split(",");
 				RegistroTelefonico reg = new RegistroTelefonico(datos[0], datos[1], datos[2]);
 				directorio.agregarRegistro(reg);
+				++i;
+				if (++i%500000 == 0)
+					System.out.println(i+" entradas...");
+				
+				entrada = br.readLine();
 			}
-
+			System.out.println(i+" entradas cargadas en total");
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 
 		System.out.println("Ciudad Central Directorio v1.0");
-		System.out.println("Bienvenido, seleccione alguna opcion del menu a continuacion:");
-		System.out.println("1: Agregar registro telefonico");
-		System.out.println("2: Buscar registro telefonico");
-		System.out.println("3: Buscar registros por apellido");
-		System.out.println("Exit: Salir de la aplicacion");
 
 		boolean seguir = true;
 
 		while (seguir)
 			try {
+				System.out.println("Bienvenido, seleccione alguna opcion del menu a continuacion:");
+				System.out.println("1: Agregar registro telefonico");
+				System.out.println("2: Buscar registro telefonico");
+				System.out.println("3: Buscar registros por apellido");
+				System.out.println("Exit: Salir de la aplicacion");
+				
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String in = br.readLine();
 				switch (in) {
@@ -60,6 +69,8 @@ public class Main {
 					RegistroTelefonico reg = new RegistroTelefonico(nombre, apellido, tel);
 
 					directorio.agregarRegistro(reg);
+					
+					System.out.println("Agregado correctamente!");
 					break;
 				case "2":
 					System.out.println("Ingrese el numero que desea buscar: ");
@@ -70,10 +81,13 @@ public class Main {
 				case "3":
 					System.out.println("Ingrese el apellido a buscar: ");
 					String apellidos = br.readLine();
-					RegistroTelefonico regg = directorio.buscarRegistrosApellido(apellidos);
-					System.out.println(regg);
+					ArrayList<RegistroTelefonico> registros = directorio.buscarRegistrosApellido(apellidos);
+					for (RegistroTelefonico registroTelefonico : registros) {
+						System.out.println(registroTelefonico);
+					}
 					break;
 				case "Exit":
+					System.out.println("Cerrando directorio...");
 					seguir = false;
 					break;
 
